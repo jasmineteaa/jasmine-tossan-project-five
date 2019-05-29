@@ -8,18 +8,38 @@ class App extends Component {
     super();
     this.state = {
       music: [],
-      isLoading: true
+      isLoading: false,
+      userInput: '',
+      userCountry: 'US'
     }
   }
-  componentDidMount() {
-    // axios request here
+  handleOptionChange = (changeEvent) => {
+    this.setState({
+      userCountry: changeEvent.target.value
+    })
+  }
+  handleChange = (event) => {
+    this.setState({
+      userInput: event.target.value
+    })
+  }
+  handleSubmit = (event) => {
+    event.preventDefault();
+    this.setState({
+      isLoading:true
+    });
+    const userCountry = this.state.userCountry;
+    const userSearch = this.state.userInput;
+    this.getData(userSearch, userCountry);
+  }
+  getData = (query, location) => {
     axios({
       url: 'https://itunes.apple.com/search',
       method: 'GET',
       dataResponse: 'JSON',
       params: {
-        term: 'jimmy+hendrix',
-        country: 'CA',
+        term: query,
+        country: location,
         limit: 25,
         media: 'music',
       }
@@ -28,16 +48,27 @@ class App extends Component {
       console.log(data);
       this.setState({
         music: data,
-        isLoading: false
+        isLoading: false,
       })
 
     })
+  }
+
+  componentDidMount() {
+    // axios request here
+
   }
   render() {
 // delete extra artistId and collectionId keys later if don't need 
     return (
       <div className="App">
-          <Form />
+          <Form 
+            userInput = {this.state.userInput}
+            userCountry = {this.state.userCountry}
+            handleChange = {this.handleChange}
+            handleSubmit = {this.handleSubmit}
+            handleOptionChange = {this.handleOptionChange}
+          />
           { this.state.isLoading ? 
           <p>Loading...</p> :
           
@@ -45,6 +76,8 @@ class App extends Component {
               const { 
                 trackName,
                 trackId,
+                trackPrice, 
+                currency,
                 artistName, 
                 artistId, 
                 artistViewUrl, 
@@ -53,8 +86,7 @@ class App extends Component {
                 collectionId, 
                 collectionViewUrl,
                 primaryGenreName, 
-                previewUrl, 
-                trackPrice 
+                previewUrl 
               } = item;
 
               return (
@@ -62,7 +94,7 @@ class App extends Component {
                   <h1>{trackName}</h1>
                   <div className="image"><img src={artwork} alt={collectionName + 'artwork'} /></div>
                   <h2 className="artist" key={artistId}><a href={artistViewUrl}>{artistName}</a></h2>
-                  <div className="price">{trackPrice}</div>
+                  <div className="price">${trackPrice} {currency}</div>
                   <p className="collection" key={collectionId}><a href={collectionViewUrl}>{collectionName}</a></p>
                   <p className="genre">{primaryGenreName}</p>
                   <a href={previewUrl}>preview this song</a>

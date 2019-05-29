@@ -5,7 +5,10 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: linear-gradient(to right, #434343 0%, black 100%);
+  color:whitesmoke;
 }
+/* https://webgradients.com/ */
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
