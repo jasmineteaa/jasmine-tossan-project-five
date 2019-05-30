@@ -53,13 +53,20 @@ class App extends Component {
   // push the selectedSong into the database
   addSong = mapIndex => {
     const oldSongTitle = [...this.state.songTitle];
-    const updatedPlaylist = oldSongTitle.filter((item, filterIndex) => filterIndex == mapIndex);
+    const updatedPlaylist = oldSongTitle.filter((item, filterIndex) => filterIndex === mapIndex);
     const updatedPlaylistString = updatedPlaylist.toString();
-    this.setState ({
-      selectedSong: updatedPlaylistString
-    })
-    const dbRef = firebase.database().ref();
-    dbRef.push(this.state.selectedSong);
+    const playlistTitle = this.state.playlist.map((item) => {
+      return item.song
+    });
+    if (playlistTitle.includes(updatedPlaylistString)){
+      alert('this song is already in your playlist')
+    }else {
+      this.setState ({
+        selectedSong: updatedPlaylistString
+      })
+      const dbRef = firebase.database().ref();
+      dbRef.push(updatedPlaylistString);
+    }
   }
   removeSong = (songKey) => {
     const dbRef = firebase.database().ref(songKey);
