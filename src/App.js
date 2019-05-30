@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
-import './App.css';
+import './index.css';
 import axios from "axios";
-import firebase from './firebase';
-
-import Header from './Header';
-import Form from "./Form";
-import SearchResult from './SearchResult';
-import SongContainer from './SongContainer';
-import Playlist from "./Playlist";
-import Footer from './Footer';
+import firebase from './modules/firebase';
+import {
+  BrowserRouter as Router,
+  Route,
+  NavLink
+} from 'react-router-dom';
+import Header from './modules/Header';
+import Home from './modules/Home';
+import Playlist from "./modules/Playlist";
 
 
 class App extends Component {
@@ -66,11 +67,6 @@ class App extends Component {
     // dbRef.child(songKey).remove();
   }  
 
-  showResultNum = () => {
-    if (this.state.isLoading == false) {
-      return <SearchResult />
-    }
-  }
   // function to get music based on user query and user location inputs
   // limit results per request to 10
   // after get data, set loading to false
@@ -123,32 +119,31 @@ class App extends Component {
   render() {
 // delete extra artistId and collectionId keys later if don't need 
     return (
-      <div className="App">
-        <Header />
+      <Router>
+        <div className="App">
+          <Route exact={true} path="/"></Route>
+          <Header />
 
-        <Form 
-          userInput = {this.state.userInput}
-          userCountry = {this.state.userCountry}
-          handleChange = {this.handleChange}
-          handleSubmit = {this.handleSubmit}
-        />
+          <NavLink to="/playlist" activeStyle={{ color: "blue" }}>Playlist</NavLink>
+          <Route path="/playlist" render={() => { return (<Playlist
+            playlist={this.state.playlist} 
+            removeSong={this.removeSong} />) 
+          }}/>
+          <NavLink to="/home" activeStyle={{ color: "blue" }}>Home</NavLink>
+          <Route path="/home" 
+            render={() => { return (<Home 
+            userInput={this.state.userInput} 
+            userCountry={this.state.userCountry} 
+            isLoading={this.state.isLoading} 
+            music={this.state.music} 
+            handleChange={this.handleChange} 
+            handleSubmit={this.handleSubmit} 
+            addSong={this.addSong} />)
+            }} />
 
-        <SearchResult />
 
-        {this.state.isLoading 
-        ? <p>Loading...</p> 
-        :<SongContainer 
-          music={this.state.music} 
-          addSong={this.addSong}  
-        />}
-
-        <Playlist 
-          playlist = {this.state.playlist}
-          removeSong = {this.removeSong}
-        />
-
-        <Footer />
-      </div>
+        </div>
+      </Router>
     );
   }
 }

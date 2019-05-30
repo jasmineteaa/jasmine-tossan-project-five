@@ -1,23 +1,23 @@
-import React, {Component} from 'react'; 
+import React from 'react'; 
+import Footer from './Footer';
 
-class Playlist extends Component {
-render() {
-  return(
+const Playlist = (props) => {
+return(
     <div className="playListContainer">
       <h1>Your Curated Playlist</h1>
       <ul className="playlist">
-        {this.props.playlist.map((item) => {
+        { props.playlist.map((item) => {
           return (
             <li key={item.key}>
               <p>{item.song}</p>
-              <button onClick={() => { this.props.removeSong(item.key) }}>remove song</button>
+              <button onClick={() => { props.removeSong(item.key) }}>remove song</button>
             </li>
           )
         })}
       </ul>
+      <Footer />
     </div>
   )
-}
 }
 
 
