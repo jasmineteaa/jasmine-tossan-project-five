@@ -2,16 +2,14 @@ import React, {Component} from 'react';
 import './App.css';
 import axios from "axios";
 import firebase from './firebase';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
-import Form from "./Form";
-import Playlist from "./Playlist";
-import SearchResult from './SearchResult';
+
 import Header from './Header';
+import Form from "./Form";
+import SearchResult from './SearchResult';
+import SongContainer from './SongContainer';
+import Playlist from "./Playlist";
 import Footer from './Footer';
 
-library.add(faPlusCircle)
 
 class App extends Component {
   // keep track of loading - get music
@@ -126,60 +124,29 @@ class App extends Component {
 // delete extra artistId and collectionId keys later if don't need 
     return (
       <div className="App">
-          {/* push props to Form component */}
-          <Header />
-          <Form 
-            userInput = {this.state.userInput}
-            userCountry = {this.state.userCountry}
-            handleChange = {this.handleChange}
-            handleSubmit = {this.handleSubmit}
-          />      
-          {this.state.isLoading ? null : <SearchResult resultLength = {this.state.music.length}/>}
-          {/* if loading is true, render loading */}
-          {/* if laoding is false, popular song details into div with unique key */}
-          {this.state.isLoading ? <p>Loading...</p> :
-          
-          this.state.music.map((item, mapIndex) => {
-            const { 
-              trackName,
-              trackId,
-              trackPrice, 
-              currency,
-              artistName, 
-              artistViewUrl, 
-              artworkUrl100: artwork, 
-              collectionName, 
-              collectionViewUrl,
-              primaryGenreName, 
-              previewUrl 
-            } = item;
+        <Header />
 
-            return (
+        <Form 
+          userInput = {this.state.userInput}
+          userCountry = {this.state.userCountry}
+          handleChange = {this.handleChange}
+          handleSubmit = {this.handleSubmit}
+        />
 
-              <div className="musicItem" key={trackId}>
-                <div className="image"><img src={artwork} alt={collectionName} /></div>
-                <h1>{trackName}</h1>
-                <h2 className="artist"><a href={artistViewUrl}>{artistName}</a></h2>
-                {/* <div className="price">${trackPrice} {currency}</div> */}
-                <p className="collection" ><a href={collectionViewUrl}>Collection: {collectionName}</a></p>
-                <p className="genre">Genre: {primaryGenreName}</p>
-                <a href={previewUrl}>preview this song</a>
-                <button key={mapIndex} onClick={()=>{this.addSong(mapIndex)}}><FontAwesomeIcon icon="plus-circle" />add to playlist</button>
-              </div>
-            )}
-          )
-        }
-        <h1>Your Curated Playlist</h1>
-        <ul className="playlist">
-          {this.state.playlist.map((item) => {
-            return(
-              <li key={item.key}>
-                <p>{item.song}</p>
-                <button onClick={()=>{this.removeSong(item.key)}}>remove song</button>
-              </li>
-            )
-          })}
-        </ul>
+        <SearchResult />
+
+        {this.state.isLoading 
+        ? <p>Loading...</p> 
+        :<SongContainer 
+          music={this.state.music} 
+          addSong={this.addSong}  
+        />}
+
+        <Playlist 
+          playlist = {this.state.playlist}
+          removeSong = {this.removeSong}
+        />
+
         <Footer />
       </div>
     );

@@ -26,6 +26,8 @@ img {
 
 .musicItem {
   width: 25%;
+  width: calc(20% - 20px);
+  margin: 10px;
 }
 .musicItem h1{
   font-size: 1.3rem;
@@ -33,6 +35,11 @@ img {
 .artist{
   font-size: 1rem;
 }
+.songContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 /* HSL
 $color1: hsla(51%, 12%, 21%, 1);
 $color2: hsla(58%, 77%, 59%, 1);
