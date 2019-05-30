@@ -17,7 +17,6 @@ class App extends Component {
   // playlist - to append music to
   constructor() {
     super();
-    this.songTitle = React.createRef();
     this.state = {
       isLoading: false,
       userInput: '',
@@ -46,11 +45,10 @@ class App extends Component {
     const userCountry = this.state.userCountry;
     const userSearch = this.state.userInput;
     this.getData(userSearch, userCountry);
-  }
-  // selectSong empty string
-  // on click - see the title attached to the musicItem
-  // store title in selectSong and push as new item in database
-  
+  }  
+
+  // on button click, if this button's mapindex matches filter index, set state for this song for selectedSong
+  // push the selectedSong into the database
   addSong = mapIndex => {
     const oldSongTitle = [...this.state.songTitle];
     const updatedPlaylist = oldSongTitle.filter((item, filterIndex) => filterIndex == mapIndex);
@@ -61,9 +59,6 @@ class App extends Component {
     const dbRef = firebase.database().ref();
     dbRef.push(this.state.selectedSong);
   }
-  // handleClick = (mapIndex) => {
-  //   console.log(this);
-  // }
 
   // function to get music based on user query and user location inputs
   // limit results per request to 10
@@ -93,7 +88,6 @@ class App extends Component {
 
     })
   }
-  // make reference to firebase database
   // create new array to store the updated playlist state 
   // if changes in data, push the new data into updatedState array
   // push all playlist songs into new array
