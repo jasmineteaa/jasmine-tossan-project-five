@@ -59,7 +59,11 @@ class App extends Component {
     const dbRef = firebase.database().ref();
     dbRef.push(this.state.selectedSong);
   }
-
+  removeSong = (songKey) => {
+    const dbRef = firebase.database().ref(songKey);
+    dbRef.remove();
+    // dbRef.child(songKey).remove();
+  }  
   // function to get music based on user query and user location inputs
   // limit results per request to 10
   // after get data, set loading to false
@@ -99,7 +103,10 @@ class App extends Component {
       const data = response.val();
       const updatePlaylist =[];
       for (let item in data) {
-        updatePlaylist.push(data[item]);
+        updatePlaylist.push({
+          key:item,
+          song: data[item]
+        });
       }
 
       this.setState({
@@ -132,11 +139,9 @@ class App extends Component {
               trackPrice, 
               currency,
               artistName, 
-              artistId, 
               artistViewUrl, 
               artworkUrl100: artwork, 
               collectionName, 
-              collectionId, 
               collectionViewUrl,
               primaryGenreName, 
               previewUrl 
@@ -145,11 +150,11 @@ class App extends Component {
             return (
 
               <div className="musicItem" key={trackId}>
+                <div className="image"><img src={artwork} alt={collectionName} /></div>
                 <h1>{trackName}</h1>
-                <div className="image"><img src={artwork} alt={collectionName + 'artwork'} /></div>
-                <h2 className="artist" key={artistId}><a href={artistViewUrl}>{artistName}</a></h2>
+                <h2 className="artist"><a href={artistViewUrl}>{artistName}</a></h2>
                 <div className="price">${trackPrice} {currency}</div>
-                <p className="collection" key={collectionId}><a href={collectionViewUrl}>{collectionName}</a></p>
+                <p className="collection" ><a href={collectionViewUrl}>{collectionName}</a></p>
                 <p className="genre">{primaryGenreName}</p>
                 <a href={previewUrl}>preview this song</a>
                 <button key={mapIndex} onClick={()=>{this.addSong(mapIndex)}}><FontAwesomeIcon icon="plus-circle" />add to playlist</button>
@@ -161,7 +166,10 @@ class App extends Component {
         <ul className="playlist">
           {this.state.playlist.map((item) => {
             return(
-              <li>{item}</li>
+              <li key={item.key}>
+                <p>{item.song}</p>
+                <button onClick={()=>{this.removeSong(item.key)}}>remove song</button>
+              </li>
             )
           })}
         </ul>
