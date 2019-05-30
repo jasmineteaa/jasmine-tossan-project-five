@@ -18,9 +18,21 @@ a{
   /* text-decoration: none; */
   color: whitesmoke;
 }
+img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+}
 
-
-
+.musicItem {
+  width: 25%;
+}
+.musicItem h1{
+  font-size: 1.3rem;
+}
+.artist{
+  font-size: 1rem;
+}
 /* HSL
 $color1: hsla(51%, 12%, 21%, 1);
 $color2: hsla(58%, 77%, 59%, 1);

@@ -7,6 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 import Form from "./Form";
 import Playlist from "./Playlist";
+import SearchResult from './SearchResult';
+import Header from './Header';
+import Footer from './Footer';
 
 library.add(faPlusCircle)
 
@@ -64,6 +67,12 @@ class App extends Component {
     dbRef.remove();
     // dbRef.child(songKey).remove();
   }  
+
+  showResultNum = () => {
+    if (this.state.isLoading == false) {
+      return <SearchResult />
+    }
+  }
   // function to get music based on user query and user location inputs
   // limit results per request to 10
   // after get data, set loading to false
@@ -83,13 +92,11 @@ class App extends Component {
       const songTitle = data.map((item) => {
         return item.trackName;
       });
-      console.log(songTitle);
       this.setState({
         music: data,
         isLoading: false,
         songTitle: songTitle,
       })
-
     })
   }
   // create new array to store the updated playlist state 
@@ -120,17 +127,17 @@ class App extends Component {
     return (
       <div className="App">
           {/* push props to Form component */}
+          <Header />
           <Form 
             userInput = {this.state.userInput}
             userCountry = {this.state.userCountry}
             handleChange = {this.handleChange}
             handleSubmit = {this.handleSubmit}
-          />
+          />      
+          {this.state.isLoading ? null : <SearchResult resultLength = {this.state.music.length}/>}
           {/* if loading is true, render loading */}
           {/* if laoding is false, popular song details into div with unique key */}
-          {this.state.isLoading ? 
-
-          <p>Loading...</p> :
+          {this.state.isLoading ? <p>Loading...</p> :
           
           this.state.music.map((item, mapIndex) => {
             const { 
@@ -153,9 +160,9 @@ class App extends Component {
                 <div className="image"><img src={artwork} alt={collectionName} /></div>
                 <h1>{trackName}</h1>
                 <h2 className="artist"><a href={artistViewUrl}>{artistName}</a></h2>
-                <div className="price">${trackPrice} {currency}</div>
-                <p className="collection" ><a href={collectionViewUrl}>{collectionName}</a></p>
-                <p className="genre">{primaryGenreName}</p>
+                {/* <div className="price">${trackPrice} {currency}</div> */}
+                <p className="collection" ><a href={collectionViewUrl}>Collection: {collectionName}</a></p>
+                <p className="genre">Genre: {primaryGenreName}</p>
                 <a href={previewUrl}>preview this song</a>
                 <button key={mapIndex} onClick={()=>{this.addSong(mapIndex)}}><FontAwesomeIcon icon="plus-circle" />add to playlist</button>
               </div>
@@ -173,6 +180,7 @@ class App extends Component {
             )
           })}
         </ul>
+        <Footer />
       </div>
     );
   }
