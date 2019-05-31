@@ -26,7 +26,8 @@ class App extends Component {
       music: [],
       songTitle: [],
       playlist: [],
-      selectedSong: ''
+      selectedSong: '',
+      audioPlaying: false
     }
   }
 
@@ -49,6 +50,25 @@ class App extends Component {
     this.getData(userSearch, userCountry);
   }  
 
+  audioPlay = (mapIndex) => {
+    const audio = document.getElementById([mapIndex]);
+    audio.onended = (event) => {
+      this.setState({
+        audioPlaying:false
+      })
+    }
+    if (this.state.audioPlaying){
+      audio.pause();
+      this.setState({
+        audioPlaying:false
+      })
+    }else {
+      audio.play();
+      this.setState({
+        audioPlaying: true
+      })
+    }
+  }
   // on button click, if this button's mapindex matches filter index, set state for this song for selectedSong
   // push the selectedSong into the database
   addSong = mapIndex => {
@@ -68,6 +88,8 @@ class App extends Component {
       dbRef.push(updatedPlaylistString);
     }
   }
+
+
   removeSong = (songKey) => {
     const dbRef = firebase.database().ref(songKey);
     dbRef.remove();
@@ -85,7 +107,7 @@ class App extends Component {
       params: {
         term: query,
         country: location,
-        limit: 10,
+        limit: 15,
         media: 'music',
       }
     }).then((res) => {
@@ -93,13 +115,19 @@ class App extends Component {
       const songTitle = data.map((item) => {
         return item.trackName;
       });
+      const audioLinks = data.map((item) => {
+        return item.previewUrl;
+      })
+      console.log(audioLinks);
       this.setState({
         music: data,
         isLoading: false,
         songTitle: songTitle,
       })
+      // this.mapFirebaseObj(data);
     })
   }
+
   // create new array to store the updated playlist state 
   // if changes in data, push the new data into updatedState array
   // push all playlist songs into new array
@@ -128,27 +156,29 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <Route exact={true} path="/"></Route>
-          <Header />
+          <div className="wrapper">
+            <Route exact={true} path="/"></Route>
+            <Header />
 
-          <NavLink to="/playlist" activeStyle={{ color: "blue" }}>Playlist</NavLink>
-          <Route path="/playlist" render={() => { return (<Playlist
-            playlist={this.state.playlist} 
-            removeSong={this.removeSong} />) 
-          }}/>
-          <NavLink to="/home" activeStyle={{ color: "blue" }}>Home</NavLink>
-          <Route path="/home" 
-            render={() => { return (<Home 
-            userInput={this.state.userInput} 
-            userCountry={this.state.userCountry} 
-            isLoading={this.state.isLoading} 
-            music={this.state.music} 
-            handleChange={this.handleChange} 
-            handleSubmit={this.handleSubmit} 
-            addSong={this.addSong} />)
-            }} />
-
-
+            <NavLink to="/playlist" activeStyle={{ color: "blue" }}>Playlist</NavLink>
+            <Route path="/playlist" render={() => { return (<Playlist
+              playlist={this.state.playlist} 
+              removeSong={this.removeSong} />) 
+            }}/>
+            <NavLink to="/home" activeStyle={{ color: "blue" }}>Home</NavLink>
+            <Route path="/home" 
+              render={() => { return (<Home 
+              userInput={this.state.userInput} 
+              userCountry={this.state.userCountry} 
+              isLoading={this.state.isLoading} 
+              music={this.state.music} 
+              handleChange={this.handleChange} 
+              handleSubmit={this.handleSubmit} 
+              addSong={this.addSong} 
+              audioPlay={this.audioPlay} />)
+              
+              }} />
+          </div>
         </div>
       </Router>
     );

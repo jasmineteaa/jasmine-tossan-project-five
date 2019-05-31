@@ -17,18 +17,16 @@ class SongContainer extends Component {
             artistViewUrl,
             artworkUrl100: artwork,
             collectionName,
-            collectionViewUrl,
             primaryGenreName,
             previewUrl
           } = item;
           return (
             <div className="musicItem" key={trackId}>
-              <div className="image"><img src={artwork} alt={collectionName} /></div>
+              <div className="image"><input type="image" src={artwork} alt={collectionName} onClick={() => { this.props.audioPlay(mapIndex)}}/></div>
               <h1>{trackName}</h1>
               <h2 className="artist"><a href={artistViewUrl}>{artistName}</a></h2>
-              <p className="collection" ><a href={collectionViewUrl}>Collection: {collectionName}</a></p>
               <p className="genre">Genre: {primaryGenreName}</p>
-              <a href={previewUrl}>preview this song</a>
+              <audio id={mapIndex} src={previewUrl} type="audio/m4a">Your browser does not support the <code>audio</code> element.</audio>
               <button key={mapIndex} onClick={() => { this.props.addSong(mapIndex) }}><FontAwesomeIcon icon="plus-circle" />add to playlist</button>
             </div>
           )

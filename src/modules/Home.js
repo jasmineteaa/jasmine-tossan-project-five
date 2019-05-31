@@ -14,13 +14,14 @@ const Home = (props) => {
         handleSubmit={props.handleSubmit}
       />
 
-      <SearchResult />
+      <SearchResult music={props.music}/>
 
       {props.isLoading
         ? <p>Loading...</p>
         : <SongContainer
           music={props.music}
           addSong={props.addSong}
+          audioPlay={props.audioPlay}
         />}
 
       <Footer />

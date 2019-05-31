@@ -23,10 +23,12 @@ img {
   width: 100%;
   max-width: 100%;
 }
-
+.wrapper{
+  max-width: 1440px;
+  margin: 0 auto;
+}
 .musicItem {
-  width: 25%;
-  width: calc(20% - 20px);
+  width: 145px;
   margin: 10px;
 }
 .musicItem h1{
@@ -52,4 +54,4 @@ $color1: rgba(61, 59, 48, 1);
 $color2: rgba(231, 226, 71, 1);
 $color3: rgba(194, 1, 20, 1);
 $color4: rgba(109, 114, 117, 1);
-$color5: rgba(166, 130, 255, 1); */ 
+$color5: rgba(166, 130, 255, 1);  */
