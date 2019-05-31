@@ -7,6 +7,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-image: linear-gradient(to right, #434343 0%, black 100%);
   color:whitesmoke;
+  max-width: 1440px;  
 }
 /* https://webgradients.com/ */
 
@@ -24,8 +25,8 @@ img {
   max-width: 100%;
 }
 .wrapper{
-  max-width: 1440px;
   margin: 0 auto;
+  width: 80%;
 }
 .musicItem {
   width: 145px;
@@ -40,6 +41,12 @@ img {
 .songContainer {
   display: flex;
   flex-wrap: wrap;
+}
+ul {
+  list-style: none; 
+}
+li{
+  display: flex;
 }
 
 /* HSL

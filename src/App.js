@@ -7,6 +7,7 @@ import {
   Route,
   NavLink
 } from 'react-router-dom';
+import swal from 'sweetalert';
 import Header from './modules/Header';
 import Home from './modules/Home';
 import Playlist from "./modules/Playlist";
@@ -25,8 +26,14 @@ class App extends Component {
       userCountry: 'US',
       music: [],
       songTitle: [],
+      songArtist:[],
+      songImage: [],
+      songAudioLink: [],
       playlist: [],
       selectedSong: '',
+      selectedArtist: '',
+      selectedImage: '',
+      selectedAudioLink: '',
       audioPlaying: false
     }
   }
@@ -75,17 +82,45 @@ class App extends Component {
     const oldSongTitle = [...this.state.songTitle];
     const updatedPlaylist = oldSongTitle.filter((item, filterIndex) => filterIndex === mapIndex);
     const updatedPlaylistString = updatedPlaylist.toString();
+
+    const oldSongArtist = [...this.state.songArtist];
+    const updatedArtist = oldSongArtist.filter((item, filterIndex) => filterIndex === mapIndex);
+    const updatedArtistString = updatedArtist.toString();
+
+    const oldSongImage = [...this.state.songImage];
+    const updatedImage = oldSongImage.filter((item, filterIndex) => filterIndex === mapIndex);
+    const updatedImageString = updatedImage.toString();
+    console.log(updatedImageString);
+
+    const oldSongLink = [...this.state.songAudioLink];
+    const updatedLink = oldSongLink.filter((item, filterIndex) => filterIndex === mapIndex);
+    const updatedLinkString = updatedLink.toString();
+    console.log(updatedLinkString);
+    
+
     const playlistTitle = this.state.playlist.map((item) => {
       return item.song
     });
     if (playlistTitle.includes(updatedPlaylistString)){
-      alert('this song is already in your playlist')
+      swal({
+        title: "oops",
+        text: "this song is already in your playlist",
+        icon: "warning",
+      });
     }else {
       this.setState ({
-        selectedSong: updatedPlaylistString
+        selectedSong: updatedPlaylistString,
+        selectedArtist: updatedArtistString,
+        selectedImage: updatedImageString,
+        selectedAudioLink: updatedLinkString
       })
       const dbRef = firebase.database().ref();
-      dbRef.push(updatedPlaylistString);
+      dbRef.push({
+        songTitle: updatedPlaylistString, 
+        songArtist: updatedArtistString,
+        songImage: updatedImageString,
+        songAudioLink: updatedLinkString
+      });
     }
   }
 
@@ -115,16 +150,25 @@ class App extends Component {
       const songTitle = data.map((item) => {
         return item.trackName;
       });
-      const audioLinks = data.map((item) => {
-        return item.previewUrl;
+      const songArtist = data.map((item) => {
+        return item.artistName;
+      });
+      const songImage = data.map((item) => {
+        return item.artworkUrl100;
       })
-      console.log(audioLinks);
+
+      const songAudioLink = data.map((item) => {
+        return item.previewUrl
+      })
+      
       this.setState({
         music: data,
         isLoading: false,
         songTitle: songTitle,
+        songArtist: songArtist,
+        songImage: songImage,
+        songAudioLink: songAudioLink
       })
-      // this.mapFirebaseObj(data);
     })
   }
 
@@ -139,9 +183,13 @@ class App extends Component {
       const data = response.val();
       const updatePlaylist =[];
       for (let item in data) {
+        console.log(data[item]);
         updatePlaylist.push({
           key:item,
-          song: data[item]
+          songTitle: data[item].songTitle,
+          songArtist: data[item].songArtist,
+          songImage: data[item].songImage,
+          songAudioLink: data[item].songAudioLink
         });
       }
 
@@ -152,7 +200,6 @@ class App extends Component {
 
   }
   render() {
-// delete extra artistId and collectionId keys later if don't need 
     return (
       <Router>
         <div className="App">
@@ -163,7 +210,8 @@ class App extends Component {
             <NavLink to="/playlist" activeStyle={{ color: "blue" }}>Playlist</NavLink>
             <Route path="/playlist" render={() => { return (<Playlist
               playlist={this.state.playlist} 
-              removeSong={this.removeSong} />) 
+              removeSong={this.removeSong} 
+              audioPlay={this.audioPlay} />) 
             }}/>
             <NavLink to="/home" activeStyle={{ color: "blue" }}>Home</NavLink>
             <Route path="/home" 
