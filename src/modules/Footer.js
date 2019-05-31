@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <p>&copy; created by Jasmine</p>
+    <p>&copy; 2019 Jasminetea</p>
   )
 }
 

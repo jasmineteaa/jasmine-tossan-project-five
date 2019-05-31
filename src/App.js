@@ -22,6 +22,7 @@ class App extends Component {
     super();
     this.state = {
       isLoading: false,
+      resultsIsShowing: false,
       userInput: '',
       userCountry: 'US',
       music: [],
@@ -34,7 +35,7 @@ class App extends Component {
       selectedArtist: '',
       selectedImage: '',
       selectedAudioLink: '',
-      audioPlaying: false
+      audioPlaying: false,
     }
   }
 
@@ -50,7 +51,8 @@ class App extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     this.setState({
-      isLoading:true
+      isLoading:true,
+      resultsIsShowing: true
     });
     const userCountry = this.state.userCountry;
     const userSearch = this.state.userInput;
@@ -78,6 +80,19 @@ class App extends Component {
   }
   // on button click, if this button's mapindex matches filter index, set state for this song for selectedSong
   // push the selectedSong into the database
+
+  arrayEqual = (arr1, arr2) => {
+  if (arr1.length !== arr2.length)
+    return false;
+  for (var i = arr1.length; i--;) {
+    if (arr1[i] !== arr2[i])
+      return false;
+  }
+  return true;
+  }
+
+  // for song title, artist, image, link, grab selected data for selected and add to state
+  // push title, artist, image, link to firebase db so it can be populated to playlist 
   addSong = mapIndex => {
     const oldSongTitle = [...this.state.songTitle];
     const updatedPlaylist = oldSongTitle.filter((item, filterIndex) => filterIndex === mapIndex);
@@ -90,38 +105,44 @@ class App extends Component {
     const oldSongImage = [...this.state.songImage];
     const updatedImage = oldSongImage.filter((item, filterIndex) => filterIndex === mapIndex);
     const updatedImageString = updatedImage.toString();
-    console.log(updatedImageString);
 
     const oldSongLink = [...this.state.songAudioLink];
     const updatedLink = oldSongLink.filter((item, filterIndex) => filterIndex === mapIndex);
     const updatedLinkString = updatedLink.toString();
-    console.log(updatedLinkString);
     
-
-    const playlistTitle = this.state.playlist.map((item) => {
-      return item.song
+    // check if selected song's title and artist is already in playlist
+    // if already in playlist show sweet alert, else add to playlist 
+    const playlistTitleArtist = this.state.playlist.map((item) => {
+      return [item.songTitle, item.songArtist]
     });
-    if (playlistTitle.includes(updatedPlaylistString)){
-      swal({
-        title: "oops",
-        text: "this song is already in your playlist",
-        icon: "warning",
-      });
-    }else {
-      this.setState ({
-        selectedSong: updatedPlaylistString,
-        selectedArtist: updatedArtistString,
-        selectedImage: updatedImageString,
-        selectedAudioLink: updatedLinkString
-      })
-      const dbRef = firebase.database().ref();
-      dbRef.push({
-        songTitle: updatedPlaylistString, 
-        songArtist: updatedArtistString,
-        songImage: updatedImageString,
-        songAudioLink: updatedLinkString
-      });
-    }
+    const selectedSongArtist = [updatedPlaylistString, updatedArtistString]
+    
+    let acc = [];
+    playlistTitleArtist.forEach((item)=> {
+      acc.push(this.arrayEqual(item, selectedSongArtist));
+    });
+    
+      if (acc.includes(true)) {
+        swal({
+          title: "oops",
+          text: "this song is already in your playlist",
+          icon: "warning",
+        });
+      }else {
+        this.setState({
+          selectedSong: updatedPlaylistString,
+          selectedArtist: updatedArtistString,
+          selectedImage: updatedImageString,
+          selectedAudioLink: updatedLinkString
+        })
+        const dbRef = firebase.database().ref();
+        dbRef.push({
+          songTitle: updatedPlaylistString,
+          songArtist: updatedArtistString,
+          songImage: updatedImageString,
+          songAudioLink: updatedLinkString
+        });
+      }
   }
 
 
@@ -183,7 +204,6 @@ class App extends Component {
       const data = response.val();
       const updatePlaylist =[];
       for (let item in data) {
-        console.log(data[item]);
         updatePlaylist.push({
           key:item,
           songTitle: data[item].songTitle,
@@ -219,6 +239,7 @@ class App extends Component {
               userInput={this.state.userInput} 
               userCountry={this.state.userCountry} 
               isLoading={this.state.isLoading} 
+              resultsIsShowing = {this.state.resultsIsShowing}
               music={this.state.music} 
               handleChange={this.handleChange} 
               handleSubmit={this.handleSubmit} 

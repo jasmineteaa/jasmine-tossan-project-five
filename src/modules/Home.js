@@ -14,7 +14,7 @@ const Home = (props) => {
         handleSubmit={props.handleSubmit}
       />
 
-      <SearchResult music={props.music}/>
+      {props.resultsIsShowing && <SearchResult music={props.music}/>}
 
       {props.isLoading
         ? <p>Loading...</p>

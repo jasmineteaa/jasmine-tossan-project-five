@@ -7,7 +7,6 @@ return(
       <h1>Your Curated Playlist</h1>
       <ul className="playlist">
         { props.playlist.map((item, mapIndex) => {
-          console.log(item);
           return (
             <li key={item.key}>
               <input type="image" src={item.songImage} alt={item.songTitle} onClick={() => { props.audioPlay(mapIndex) }} />
