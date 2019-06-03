@@ -1,3 +1,10 @@
+Credits: 👏💕
+1. Header image by Edward Cisneros on Unsplash
+2. alerts created using sweetalert.js
+3. smoothscroll created using jump.js
+4. music is from Itune's API 
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -68,4 +75,3 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/de
 This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
 
 
-Header image by Edward Cisneros on Unsplash
