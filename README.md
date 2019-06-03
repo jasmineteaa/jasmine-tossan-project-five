@@ -1,3 +1,6 @@
+This is an app that allows you to explore different songs, artists or music genres, 
+play samples of music and add it to your playlist 🎧
+
 Credits: 👏💕
 1. Header image by Edward Cisneros on Unsplash
 2. alerts created using sweetalert.js
