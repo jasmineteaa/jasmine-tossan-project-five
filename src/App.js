@@ -173,7 +173,6 @@ class App extends Component {
       }
     }).then((res) => {
       const data = res.data.results;
-      console.log(data);
       const songTitle = data.map((item) => {
         return item.trackName;
       });
