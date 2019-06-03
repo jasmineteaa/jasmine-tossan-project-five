@@ -8,7 +8,6 @@ library.add(faPlusCircle, faPlayCircle, faPauseCircle)
 
 class SongContainer extends Component {
   render() {
-    console.log(this.props);
     return (
       <div className="songContainer" aria-live="polite" role="main">
         {this.props.music.map((item, mapIndex) => {

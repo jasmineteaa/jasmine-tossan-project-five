@@ -16,8 +16,6 @@ import jump from 'jump.js';
 
 
 class App extends Component {
-  // keep track of loading - get music
-  // userInput, userCountry
   // music - array of results matching user inputs
   // playlist - to append music to
   constructor() {
@@ -38,24 +36,8 @@ class App extends Component {
       selectedImage: '',
       selectedAudioLink: '',
       audioPlaying: false,
-      audioTime: 0
     }
   }
-
-//   var Scroll = require('react-scroll');
-//   var Element = Scroll.Element;
-//   var scroller = Scroll.scroller;
-
-
-
-// // Somewhere else, even another file
-// scroller.scrollTo('#songContainer', {
-//   duration: 1500,
-//   delay: 100,
-//   smooth: true,
-//   containerId: '#songContainer',
-//   offset: 50, // Scrolls to element + 50 pixels down the page
-// })
 
   // if there is change in input fields, set the new values in state
   handleChange = (event) => {
@@ -173,11 +155,10 @@ class App extends Component {
   removeSong = (songKey) => {
     const dbRef = firebase.database().ref(songKey);
     dbRef.remove();
-    // dbRef.child(songKey).remove();
   }  
 
   // function to get music based on user query and user location inputs
-  // limit results per request to 10
+  // limit results per request to 15
   // after get data, set loading to false
   getData = (query, location) => {
     axios({
@@ -246,7 +227,7 @@ class App extends Component {
   }
 
   render() {
-    const { isLoading, resultsIsShowing, userInput, userCountry, music, playlist, audioPlaying, audioTime ,selectedSong, selectedArtist, selectedImage, selectedAudioLink} = this.state
+    const { isLoading, resultsIsShowing, userInput, userCountry, music, playlist, audioPlaying ,selectedSong, selectedArtist, selectedImage, selectedAudioLink} = this.state
 
     return (
       <Router>
@@ -258,7 +239,6 @@ class App extends Component {
               removeSong={this.removeSong} 
               audioPlay={this.audioPlay} 
               audioPlaying={audioPlaying} 
-              audioTime={audioTime}
               selectedSong = {selectedSong}
               selectedArtist={selectedArtist} 
               selectedImage={selectedImage} 
@@ -274,7 +254,6 @@ class App extends Component {
               resultsIsShowing = {resultsIsShowing}
               music={music}
               audioPlaying={audioPlaying} 
-              audioTime ={audioTime}
               handleChange={this.handleChange} 
               handleSubmit={this.handleSubmit} 
               addSong={this.addSong} 
