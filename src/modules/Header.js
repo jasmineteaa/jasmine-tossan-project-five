@@ -4,9 +4,7 @@ class Header extends Component {
   render() {
     return(
       <header>
-        <h1>Playlist Generator</h1>
-        <h2>Preview different songs and mark them down for your playlist.</h2>
-        <p>Click on the playlist tab to see your new playlist!</p>
+        <h1>Music Thing. <span>A Playlist Generator.</span></h1>
       </header>
     )
   }

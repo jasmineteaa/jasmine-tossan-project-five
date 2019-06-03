@@ -1,16 +1,18 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import './index.css';
 import axios from "axios";
 import firebase from './modules/firebase';
 import {
   BrowserRouter as Router,
-  Route,
-  NavLink
+  Route
 } from 'react-router-dom';
 import swal from 'sweetalert';
-import Header from './modules/Header';
+import Nav from './modules/Nav';
 import Home from './modules/Home';
 import Playlist from "./modules/Playlist";
+import jump from 'jump.js';
+
+
 
 
 class App extends Component {
@@ -36,8 +38,24 @@ class App extends Component {
       selectedImage: '',
       selectedAudioLink: '',
       audioPlaying: false,
+      audioTime: 0
     }
   }
+
+//   var Scroll = require('react-scroll');
+//   var Element = Scroll.Element;
+//   var scroller = Scroll.scroller;
+
+
+
+// // Somewhere else, even another file
+// scroller.scrollTo('#songContainer', {
+//   duration: 1500,
+//   delay: 100,
+//   smooth: true,
+//   containerId: '#songContainer',
+//   offset: 50, // Scrolls to element + 50 pixels down the page
+// })
 
   // if there is change in input fields, set the new values in state
   handleChange = (event) => {
@@ -50,7 +68,11 @@ class App extends Component {
   // grab user inputs and make axios call to fetch data
   handleSubmit = (event) => {
     event.preventDefault();
+    jump('.songContainer', {
+      a11y: true
+    });
     this.setState({
+      userInput:'',
       isLoading:true,
       resultsIsShowing: true
     });
@@ -60,7 +82,7 @@ class App extends Component {
   }  
 
   audioPlay = (mapIndex) => {
-    const audio = document.getElementById([mapIndex]);
+    const audio = document.getElementById(mapIndex);
     audio.onended = (event) => {
       this.setState({
         audioPlaying:false
@@ -146,6 +168,8 @@ class App extends Component {
   }
 
 
+  
+
   removeSong = (songKey) => {
     const dbRef = firebase.database().ref(songKey);
     dbRef.remove();
@@ -168,6 +192,7 @@ class App extends Component {
       }
     }).then((res) => {
       const data = res.data.results;
+      console.log(data);
       const songTitle = data.map((item) => {
         return item.trackName;
       });
@@ -219,36 +244,48 @@ class App extends Component {
     })
 
   }
+
   render() {
+    const { isLoading, resultsIsShowing, userInput, userCountry, music, playlist, audioPlaying, audioTime ,selectedSong, selectedArtist, selectedImage, selectedAudioLink} = this.state
+
     return (
       <Router>
-        <div className="App">
-          <div className="wrapper">
-            <Route exact={true} path="/"></Route>
-            <Header />
+        <Fragment>
+          <Nav />
 
-            <NavLink to="/playlist" activeStyle={{ color: "blue" }}>Playlist</NavLink>
             <Route path="/playlist" render={() => { return (<Playlist
-              playlist={this.state.playlist} 
+              playlist={playlist} 
               removeSong={this.removeSong} 
-              audioPlay={this.audioPlay} />) 
+              audioPlay={this.audioPlay} 
+              audioPlaying={audioPlaying} 
+              audioTime={audioTime}
+              selectedSong = {selectedSong}
+              selectedArtist={selectedArtist} 
+              selectedImage={selectedImage} 
+              selectedAudioLink={selectedAudioLink}
+              />) 
             }}/>
-            <NavLink to="/home" activeStyle={{ color: "blue" }}>Home</NavLink>
-            <Route path="/home" 
+
+            <Route exact path="/" 
               render={() => { return (<Home 
-              userInput={this.state.userInput} 
-              userCountry={this.state.userCountry} 
-              isLoading={this.state.isLoading} 
-              resultsIsShowing = {this.state.resultsIsShowing}
-              music={this.state.music} 
+              userInput={userInput} 
+              userCountry={userCountry} 
+              isLoading={isLoading} 
+              resultsIsShowing = {resultsIsShowing}
+              music={music}
+              audioPlaying={audioPlaying} 
+              audioTime ={audioTime}
               handleChange={this.handleChange} 
               handleSubmit={this.handleSubmit} 
               addSong={this.addSong} 
-              audioPlay={this.audioPlay} />)
-              
+              audioPlay={this.audioPlay} 
+              selectedSong={selectedSong}
+              selectedArtist={selectedArtist}
+              selectedImage={selectedImage}
+              selectedAudioLink={selectedAudioLink}
+              />)              
               }} />
-          </div>
-        </div>
+        </Fragment>        
       </Router>
     );
   }
