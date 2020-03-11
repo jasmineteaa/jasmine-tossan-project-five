@@ -1,6 +1,6 @@
-import React from 'react'; 
+import * as React from 'react'; 
 
-const Footer = () => {
+const Footer: React.FC = (): JSX.Element => {
   return (
     <footer>
       <p>&copy; 2019 Made by <a href="https://github.com/jasmineteaa">Jasmineteaa.</a></p>

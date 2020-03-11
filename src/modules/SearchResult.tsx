@@ -1,6 +1,11 @@
-import React from 'react'; 
+import * as React from 'react';
 
-const SearchResult = (props) => {
+// @@TODO fix typing
+interface ISearchResultComponentProps {
+  music: any;
+}
+
+const SearchResult: React.FC<ISearchResultComponentProps> = (props): JSX.Element => {
   return (
     <div className="searchResults">
       <h3>Click on the album covers below to preview your track</h3>

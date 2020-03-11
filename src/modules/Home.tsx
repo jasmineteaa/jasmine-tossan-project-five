@@ -1,11 +1,23 @@
-import React, { Fragment } from 'react'; 
+import * as React from 'react';
 import SearchResult from './SearchResult';
 import SongContainer from './SongContainer';
 import Footer from './Footer';
 
-const Home = (props) => {
-  return(
-    <Fragment>
+interface IHomeComponentProps {
+  handleSubmit: any;
+  userCountry: any;
+  handleChange: any;
+  userInput: any;
+  resultsIsShowing: any;
+  music: any;
+  addSong: any;
+  isLoading: any;
+  audioPlay: any;
+  audioPlaying: any;
+}
+const Home: React.FC<IHomeComponentProps> = (props): JSX.Element => {
+  return (
+    <>
       <div className="searchPage">
         <h1>Music Thing. <span>A Playlist Generator.</span></h1>
         <form role="search" aria-labelledby="search" onSubmit={props.handleSubmit}>
@@ -57,21 +69,19 @@ const Home = (props) => {
 
       <div className="search" id="search">
         <div className="wrapper">
-          {props.resultsIsShowing && <SearchResult music={props.music}/>}
-
+          {props.resultsIsShowing && <SearchResult music={props.music} />}
           {props.isLoading
             ? <p>Loading...</p>
             : <SongContainer
               music={props.music}
               addSong={props.addSong}
               audioPlay={props.audioPlay}
-              audioPlaying = {props.audioPlaying}
+              audioPlaying={props.audioPlaying}
             />}
         </div>
         <Footer />
       </div>
-
-    </Fragment>
+    </>
   )
 }
 export default Home;

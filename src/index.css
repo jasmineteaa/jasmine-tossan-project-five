@@ -18,6 +18,11 @@ body {
   background-image: linear-gradient(to right, #434343 0%, black 100%);
 }
 
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
@@ -345,8 +350,10 @@ input[type="image"]:active{
 
 .search{
   color: whitesmoke;
-  padding: 100px 0;
-
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 .searchResults{
   text-align: center;
@@ -544,6 +551,9 @@ footer a:hover {
   }
   .topBar li {
     margin: 10px;
+  }
+  .searchPage {
+    flex-grow: 1;
   }
   header,
   .searchPage{

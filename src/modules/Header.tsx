@@ -1,6 +1,6 @@
-import React from 'react'; 
+import * as React from 'react'; 
 
-const Header = () => {
+const Header: React.FC = (): JSX.Element => {
   return(
     <header>
       <h1>Music Thing. <span>A Playlist Generator.</span></h1>
