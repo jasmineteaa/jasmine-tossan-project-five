@@ -1,7 +1,5 @@
-import * as React from 'react';
-
 import { combineReducers } from 'redux';
-
+import songReducer from './songReducer';
 export default combineReducers({
-  test: () => 3
+  songs: songReducer,
 });

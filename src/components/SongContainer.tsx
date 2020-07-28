@@ -2,9 +2,11 @@ import * as React from 'react';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faPlayCircle, faPauseCircle } from '@fortawesome/free-solid-svg-icons';
-import { addSong } from '../actions';
+import { addSong, getPlaylist } from '../actions';
 import { connect } from 'react-redux';
-import { List, Map } from 'immutable';
+import { List, Map, fromJS } from 'immutable';
+import firebase from '../firebase';
+import swal from 'sweetalert';
 library.add(faPlusCircle, faPlayCircle, faPauseCircle)
 
 
@@ -12,24 +14,53 @@ library.add(faPlusCircle, faPlayCircle, faPauseCircle)
 interface ISongContainerComponentProps {
   searchedSongs: List<any>;
   addSong: (song: Map<string, any>) => void;
+  getPlaylist: (playlist: Map<number, any>) => void;
+  playlist: Map<string, any>;
 }
 
 const SongContainer: React.FC<ISongContainerComponentProps> = (props) => {
   const {
     searchedSongs,
     addSong,
+    getPlaylist,
+    playlist,
   } = props;
+
+  React.useEffect(() => {
+    const dbRef = firebase.database().ref();
+    dbRef.on('value', (response) => {
+      const data = response.val();
+      const immutableData = fromJS(data);
+
+      getPlaylist(immutableData);
+    })
+  }, []); // eslint-disable-line
 
   const [audioPlaying, setAudioPlaying] = React.useState(false);
   const [selectedAudio, setSelectedAudio] = React.useState(Map());
   const audio = document.querySelector('audio');
-
+  const handleAddSong = (newSong) => {
+    const noDuplicates = playlist.size === 0 || playlist.every(song => {
+      return newSong.get('trackId') !== song.get('trackId')
+    })
+    if (!noDuplicates) {
+      swal({
+        title: "oops",
+        text: "this song is already in your playlist",
+        icon: "warning",
+      });
+      return;
+    }
+    addSong(newSong);
+  }
   const toggleAudio = (song: Map<string, any>, isSelectedAudio: boolean) => {
     function playAudio() {
       setSelectedAudio(song);
-
-      audio.src = song.get('previewUrl');
-      audio.play();
+      // @@TODO something buggy here
+      if (audio) {
+        audio.src = song.get('previewUrl');
+        audio.play();
+      }
     }
 
     if (audioPlaying && isSelectedAudio) {
@@ -82,8 +113,7 @@ const SongContainer: React.FC<ISongContainerComponentProps> = (props) => {
             </h4>
             <button
               key={mapIndex}
-              // @@TODO check if song in playlist before add
-              onClick={() => addSong(song)}
+              onClick={() => handleAddSong(song)}
             >
               <FontAwesomeIcon icon="plus-circle" />add to playlist
             </button>
@@ -100,8 +130,9 @@ const SongContainer: React.FC<ISongContainerComponentProps> = (props) => {
 
 const mapStateToProps = ({ songs }) => {
   return {
-    searchedSongs: songs.get('searchedSongs')
+    searchedSongs: songs.get('searchedSongs'),
+    playlist: songs.get('playlist'),
   }
 }
 
-export default connect(mapStateToProps, { addSong })(SongContainer);
+export default connect(mapStateToProps, { addSong, getPlaylist })(SongContainer);
