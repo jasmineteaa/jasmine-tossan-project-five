@@ -45,7 +45,7 @@ const Nav: React.FC = (): JSX.Element => {
           <IconButton edge="start" color="inherit" aria-label="home" className={classes.menuButton}>
             <RadioRoundedIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}> 
+          <Typography variant="h6" className={classes.title}>
             Music Player
           </Typography>
           <Link color='inherit' component={HomeLink} className={classes.link} variant='body1'>Home</Link>

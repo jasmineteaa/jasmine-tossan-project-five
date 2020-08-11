@@ -26,11 +26,10 @@ const theme = createMuiTheme({
 class App extends Component<IApp> {
 
   render() {
-
     return (
       <Router>
         <ThemeProvider theme={theme}>
-          <CssBaseline/>
+          <CssBaseline />
           <Nav />
           <Route path="/playlist" render={() => <Playlist />} />
           <Route exact path="/" render={() => <Home />} />
