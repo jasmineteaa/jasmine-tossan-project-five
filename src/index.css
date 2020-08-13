@@ -61,20 +61,7 @@ img {
   text-shadow: 2px 2px 3px black;
   letter-spacing: 1px;
 }
-[type="submit"] {
-  padding: 15px;
-  border-radius: 0 5px 5px 0;
-  border: none;
-  background: rgb(26, 26, 26);
-  text-transform: capitalize;
-  border: 2px solid rgb(26, 26, 26);
-  color: white;
-  letter-spacing:1px;
-}
-[type="submit"]:hover{
-  border: 2px solid rgb(51, 51, 51);
-  background: rgb(51, 51, 51);
-}
+
 label[for="userInput"] {
   display: block;
 }
@@ -148,11 +135,6 @@ label {
 .radio {
   margin-top: 10px;
 }
-label[for="userInput"] {
-  margin: 30px;
-  font-size: 1.8rem;
-  text-shadow: 2px 2px 2px black;
-}
 
 /* ================================================ */
 /* topbar */
@@ -164,7 +146,6 @@ nav ul {
   align-items: center;
   height: 100%;
 }
-[type="submit"],
 footer a,
 nav ul li a,
 nav ul li a:after,
@@ -312,13 +293,11 @@ input[type="image"]{
 }
 .songContainer button:focus,
 [type="text"]:focus,
-[type="submit"]:focus, 
 input[type="image"]:focus{
   box-shadow: 0px 0px 15px 10px rgba(108, 79, 58, 0.58);
 }
 .songContainer button:active,
 [type="text"]:active,
-[type="submit"]:active, 
 input[type="image"]:active{
   box-shadow: 0px 0px 15px 10px rgba(108, 79, 58, 0.58);
 }
@@ -519,15 +498,11 @@ footer a:hover {
     font-size: 1.8rem;
     
   }
-  [type="text"],
-  [type="submit"]{
+  [type="text"]{
     border-radius: 5px;
   }
-  [type="submit"]{
-    width: 60%;
-  }
+
   .countryInput, 
-  [type="submit"],
   [type="text"],
   label[for="userInput"]{
     font-size: 1rem;
@@ -556,7 +531,6 @@ footer a:hover {
   .searchPage{
     height: 100vh;
   }
-  [type="submit"],
   [type="text"] {
     width: 80%;
   }
@@ -606,14 +580,6 @@ footer a:hover {
   }
   .searchResults{
     font-size:1.1rem;
-  }
-  [type="submit"]{
-    border: 2px solid rgb(60, 60, 60);
-    background: rgb(60, 60, 60);
-  }
-  [type="submit"]:hover{
-    border: 2px solid rgb(60, 60, 60, 0.6);
-    background: rgb(60, 60, 60, 0.6);
   }
   label[for="userInput"] {
     margin: 10px;

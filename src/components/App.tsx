@@ -39,8 +39,8 @@ class App extends Component<IApp> {
   }
 }
 
-const mapStateToProps = () => {
-
+const mapStateToProps = (state) => {
+  return {};
 }
 
 export default connect(mapStateToProps, { setSearchLoading, searchSongs })(App);

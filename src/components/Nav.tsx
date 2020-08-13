@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme: Theme) =>
       // @@TODO nicer hover effect
       textTransform: 'uppercase',
       paddingRight: theme.spacing(2),
+      '&:hover': {
+        color: theme.palette.secondary.main
+      }
     }
   }),
 );
