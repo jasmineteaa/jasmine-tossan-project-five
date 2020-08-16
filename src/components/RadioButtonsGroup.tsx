@@ -15,8 +15,9 @@ interface IRadioOptions {
 }
 
 interface IRadioButtonsGroup {
-  formControlLabelProps?: Object;
   radioOptions: IRadioOptions[];
+  label: string;
+  formControlLabelProps?: Object;
   customValue?: string;
   customOnChange?: any;
 }
@@ -27,9 +28,6 @@ const useStyles = makeStyles((theme: Theme) =>
       '.MuiFormLabel-root.Mui-focused': {
         color: theme.palette.common.white
       },
-    },
-    root: {
-      flexDirection: 'row'
     },
     label: {
       fontSize: theme.typography.h5.fontSize,
@@ -44,6 +42,7 @@ const RadioButtonsGroup: React.FC<IRadioButtonsGroup> = (props) => {
     radioOptions,
     customOnChange,
     customValue,
+    label,
   } = props;
 
   const classes = useStyles();
@@ -66,7 +65,7 @@ const RadioButtonsGroup: React.FC<IRadioButtonsGroup> = (props) => {
               root: classes.label,
             }}
           >
-            Please select your country:
+            {label}
           </FormLabel>
         </Grid>
         <RadioGroup
@@ -74,7 +73,7 @@ const RadioButtonsGroup: React.FC<IRadioButtonsGroup> = (props) => {
           name="user-country"
           value={customValue ? customValue : value}
           onChange={customOnChange ? customOnChange : handleChange}
-          className={classes.root}
+          row={true}
         >
           {
             radioOptions.map(({ value, label }) => (

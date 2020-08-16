@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import jump from 'jump.js';
 import { searchSongs } from '../actions';
 import RadioButtonsGroup from './RadioButtonsGroup';
-import { TextField, Grid, IconButton, makeStyles, Theme, createStyles, Button } from '@material-ui/core';
+import { TextField, Grid, makeStyles, Theme, createStyles, Button } from '@material-ui/core';
 import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
 interface IHomeComponentProps {
 
@@ -27,6 +27,17 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
     flexGrow: 1,
   }
 }));
+
+export const radioOptions = [
+  {
+    value: 'US',
+    label: 'US'
+  },
+  {
+    value: 'CA',
+    label: 'CA'
+  }
+];
 
 const Home: React.FC<IHomeProps> = (props): JSX.Element => {
   const classes = useStyles();
@@ -57,16 +68,7 @@ const Home: React.FC<IHomeProps> = (props): JSX.Element => {
     searchSongs(userInput, userCountry);
     setUserInput('');
   }
-  const radioOptions = [
-    {
-      value: 'US',
-      label: 'US'
-    },
-    {
-      value: 'CA',
-      label: 'CA'
-    }
-  ]
+
   return (
     <>
       <div className='searchPage'>
@@ -88,6 +90,7 @@ const Home: React.FC<IHomeProps> = (props): JSX.Element => {
             >
               <Grid item={true}>
                 <RadioButtonsGroup
+                  label='Please select your country:'
                   radioOptions={radioOptions}
                   customValue={userCountry}
                   customOnChange={handleChange}
