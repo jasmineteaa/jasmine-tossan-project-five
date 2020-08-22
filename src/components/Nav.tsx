@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme: Theme) =>
       flexGrow: 1,
     },
     link: {
-      // @@TODO nicer hover effect
       textTransform: 'uppercase',
       paddingRight: theme.spacing(2),
       '&:hover': {

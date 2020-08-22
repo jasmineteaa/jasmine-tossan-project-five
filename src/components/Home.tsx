@@ -6,8 +6,9 @@ import { connect } from 'react-redux';
 import jump from 'jump.js';
 import { searchSongs } from '../actions';
 import RadioButtonsGroup from './RadioButtonsGroup';
-import { TextField, Grid, makeStyles, Theme, createStyles, Button } from '@material-ui/core';
+import { TextField, Grid, makeStyles, Theme, createStyles, Button, Typography, LinearProgress } from '@material-ui/core';
 import SearchRoundedIcon from '@material-ui/icons/SearchRounded';
+import swal from 'sweetalert';
 interface IHomeComponentProps {
 
 }
@@ -19,11 +20,19 @@ interface IHomeProps extends IHomeComponentProps {
 }
 
 const useStyles = makeStyles((theme: Theme) => createStyles({
+  '@global': {
+    '.MuiInput-underline::after': {
+      borderBottom: `2px solid ${theme.palette.secondary.main}`
+    }
+  },
   searchButton: {
     background: theme.palette.common.black,
     margin: theme.spacing(1),
   },
   textField: {
+    flexGrow: 1,
+  },
+  root: {
     flexGrow: 1,
   }
 }));
@@ -61,108 +70,84 @@ const Home: React.FC<IHomeProps> = (props): JSX.Element => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!userInput) {
+      return swal({
+        title: "oops",
+        text: "Please enter a valid search term",
+        icon: "error",
+      });
+    }
+    searchSongs(userInput, userCountry);
+    setUserInput('');
     jump('.songContainer', {
       a11y: true
     });
-
-    searchSongs(userInput, userCountry);
-    setUserInput('');
   }
 
   return (
     <>
       <div className='searchPage'>
-        <h1>Music Player. <span>A Playlist Generator.</span></h1>
-        <form role='search' aria-labelledby='search' onSubmit={handleSubmit}>
-          <Grid
-            container={true}
-            justify='center'
-            wrap='nowrap'
-          >
-            <Grid item={true} md={2} xs={1} />
-            <Grid
-              item={true}
-              md={8}
-              xs={10}
-              container={true}
-              direction='column'
-              spacing={3}
-            >
-              <Grid item={true}>
-                <RadioButtonsGroup
-                  label='Please select your country:'
-                  radioOptions={radioOptions}
-                  customValue={userCountry}
-                  customOnChange={handleChange}
-                />
-              </Grid>
-              <Grid container={true}>
-                <TextField
-                  name='userInput'
-                  id='userInput'
-                  label='Enter artist, song or music genre'
-                  type='search'
-                  onChange={handleChange}
-                  classes={{
-                    root: classes.textField
-                  }}
-                />
-                <Button
-                  variant='contained'
-                  color='secondary'
-                  className={classes.searchButton}
-                  startIcon={<SearchRoundedIcon />}
-                  type='submit'
-                >
-                  Search
-                </Button>
-              </Grid>
-            </Grid>
-            <Grid item={true} md={2} xs={1} />
+        <Grid
+          container={true}
+          direction='column'
+          className={classes.root}
+          justify='center'
+          alignItems='center'
+        >
+          <Grid item={true} direction='column'>
+            <Typography variant='h2'>Music Player.</Typography>
+            <Typography variant='h3'>A Playlist Generator.</Typography>
           </Grid>
-          {/* <div className='countryInput'>
-
-            <label>Please select your country:</label>
-
-            <div className='radio'>
-              <span>
-                <input type='radio'
-                  name='userCountry'
-                  id='us'
-                  value='US'
-                  checked={userCountry === 'US'}
-                  onChange={handleChange} />
-                <label htmlFor='us'>US</label>
-              </span>
-            </div>
-
-            <div className='radio'>
-              <span>
-                <input type='radio'
-                  name='userCountry'
-                  id='canada'
-                  value='CA'
-                  onChange={handleChange}
-                  checked={userCountry === 'CA'} />
-                <label htmlFor='canada'>Canada</label>
-              </span>
-            </div>
-          </div> */}
-
-
-          {/* end of country input*/}
-          {/* <label htmlFor='userInput'>What are you searching for?</label>
-          <input
-            id='userInput'
-            name='userInput'
-            value={userInput}
-            onChange={handleChange}
-            type='text'
-            placeholder='Enter artist, song or music genre' /> */}
-          {/* end of text input */}
-
-          {/* <input type='submit' value='Search' /> */}
-        </form>
+          <Grid item={true}>
+            <form role='search' aria-labelledby='search' onSubmit={handleSubmit}>
+              <Grid
+                container={true}
+                justify='center'
+                wrap='nowrap'
+              >
+                <Grid
+                  item={true}
+                  md={10}
+                  xs={12}
+                  container={true}
+                  direction='column'
+                  spacing={3}
+                >
+                  <Grid item={true}>
+                    <RadioButtonsGroup
+                      label='Please select your country:'
+                      radioOptions={radioOptions}
+                      customValue={userCountry}
+                      customOnChange={handleChange}
+                    />
+                  </Grid>
+                  <Grid container={true}>
+                    <TextField
+                      name='userInput'
+                      id='userInput'
+                      label='Enter artist, song or music genre'
+                      type='search'
+                      onChange={handleChange}
+                      classes={{
+                        root: classes.textField
+                      }}
+                      value={userInput}
+                    />
+                    <Button
+                      variant='contained'
+                      color='secondary'
+                      className={classes.searchButton}
+                      startIcon={<SearchRoundedIcon />}
+                      type='submit'
+                    >
+                      Search
+                  </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </form>
+          </Grid>
+        </Grid>
       </div>
 
       <div className='search' id='search'>
@@ -170,7 +155,7 @@ const Home: React.FC<IHomeProps> = (props): JSX.Element => {
           {showResults && <SearchResult />}
           {
             loadingSearch
-              ? <p>Loading...</p>
+              ? <LinearProgress color="secondary" />
               : <SongContainer />
           }
         </div>
